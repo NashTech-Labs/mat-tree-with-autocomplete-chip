@@ -1,0 +1,74 @@
+<section class="w-50 ms-5">
+  <div>
+    <mat-label class="form-label" data-testid="mabl-site-hierarchy-label">Site Hierarchy</mat-label>
+</div>
+<div class="form-field">
+
+<div class="chip-list-wrapper">
+  <span class="float-end mt-1 me-1">
+    <mat-icon class="remove-all" *ngIf="checklistSelection.selected.length >0" (click)="removeAll()">cancel</mat-icon>
+  </span>
+  <mat-chip-grid #chipGrid>
+      <mat-chip-row *ngFor="let node of checklistSelection.selected" (removed)="removeSelected(node)">
+        {{node.item}}
+        <button matChipRemove>
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip-row>
+  </mat-chip-grid>
+  </div>
+    <mat-form-field class="hierarchy-field">
+      <input class="ms-2"
+      matInput type="text"
+      [placeholder]="'Select hierarchy..'"
+      #autoTreeInput
+      [matChipInputFor]="chipGrid"
+      [matAutocomplete]="auto"
+      formControlName="fieldName"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      (input)="applyFilter($event.target)"/>
+    </mat-form-field>
+</div>
+  <mat-autocomplete #auto="matAutocomplete" (opened)="opened()">
+    <mat-option disabled hidden>Select Item</mat-option>
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+      <mat-tree-node
+        *matTreeNodeDef="let node"
+        matTreeNodeToggle
+        matTreeNodePadding>
+        <button mat-icon-button disabled></button>
+        <mat-checkbox
+          color="primary"
+          class="checklist-leaf-node"
+          [checked]="checklistSelection.isSelected(node)"
+          (change)="todoLeafItemSelectionToggle(node)"
+        >
+          {{ node.item }}
+        </mat-checkbox>
+      </mat-tree-node>
+      <mat-tree-node
+        class="node"
+        *matTreeNodeDef="let node; when: hasChild"
+        matTreeNodePadding
+      >
+        <button
+          mat-icon-button
+          matTreeNodeToggle
+          [attr.aria-label]="'toggle ' + node.filename"
+        >
+          <mat-icon class="mat-icon-rtl-mirror">
+            {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+          </mat-icon>
+        </button>
+        <mat-checkbox
+          color="primary"
+          [checked]="descendantsAllSelected(node)"
+          [indeterminate]="descendantsPartiallySelected(node)"
+          (change)="todoItemSelectionToggle(node)"
+        >
+          {{ node.item }}
+        </mat-checkbox>
+      </mat-tree-node>
+    </mat-tree>
+  </mat-autocomplete>
+</section>

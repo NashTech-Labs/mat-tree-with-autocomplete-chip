@@ -1,0 +1,15 @@
+
+<h2 class="text-primary m-5"> Mat-Tree with multi-select, auto-complete and mat-chips</h2>
+<app-tree-field
+[treeData]="treeData"
+[transSiteHierarchySelected]="transSiteHierarchySelected"
+(sendTransSiteHierarchySelected)="getData($event)">
+</app-tree-field>
+<div class="d-flex ms-5" *ngIf="transSiteHierarchySelected.length">
+<b>Selected Item:</b>
+<div *ngFor="let item of transSiteHierarchySelected">
+<p class="text-danger">{{item.item }},</p>
+</div>
+</div>
+
+
